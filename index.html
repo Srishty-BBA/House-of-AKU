@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bill Maker">
+<meta name="theme-color" content="#f4efe1">
+<title>Bill Maker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4efe1; --card:#fffdf7; --ink:#2c2a22; --mut:#8b8370; --line:#e2dac4;
+  --moss:#4a5a3f; --moss-dp:#374530; --clay:#b8654f; --clay-soft:#eddcd3;
+  --serif:"Fraunces",Georgia,serif; --sans:"Karla",system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#211f18; --card:#2a2820; --ink:#ece6d5; --mut:#a9a08a; --line:#3c392c;
+  --moss:#8fa87d; --moss-dp:#a5bd92; --clay:#d98d76; --clay-soft:#3a2b25;
+}}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto;padding:20px 18px 60px}
+h1{font-family:var(--serif);font-weight:600;font-size:1.7rem;margin:2px 0 1px;letter-spacing:.01em}
+.sub{color:var(--mut);font-size:.87rem;margin:0 0 20px}
+.tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;padding:10px 8px;border:none;border-bottom:2px solid transparent;background:transparent;color:var(--mut);font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--moss);border-bottom-color:var(--moss)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:3px;margin-bottom:16px;overflow:hidden}
+.card>.hd{font-family:var(--serif);font-style:italic;font-weight:500;color:var(--moss);padding:13px 16px 10px;font-size:1.08rem;border-bottom:1px solid var(--line)}
+.card>.bd{padding:16px}
+label{display:block;font-size:.72rem;color:var(--mut);font-weight:600;margin:11px 0 4px;letter-spacing:.02em}
+input,textarea,select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink);font:inherit;font-size:.93rem}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--moss);box-shadow:0 0 0 3px color-mix(in srgb,var(--moss) 15%,transparent)}
+textarea{min-height:64px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1;min-width:130px}
+button.act{padding:10px 16px;border-radius:3px;border:1px solid var(--moss);background:var(--moss);color:#fdf9ef;font:inherit;font-weight:600;font-size:.9rem;cursor:pointer;transition:background .15s}
+button.act:hover{background:var(--moss-dp)}
+button.ghost{background:transparent;color:var(--moss)}
+button.mini{padding:5px 11px;font-size:.79rem;border-radius:3px;border:1px solid var(--line);background:transparent;color:var(--moss);font-weight:600;cursor:pointer}
+button.mini:hover{border-color:var(--moss)}
+.crumb{font-size:.82rem;color:var(--mut);margin-bottom:10px;word-break:break-word}
+.crumb a{color:var(--clay);font-weight:600;cursor:pointer;text-decoration:none}
+.item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item .nm{flex:1;min-width:0}
+.item .nm b{display:block;font-weight:600;font-size:.95rem}
+.item .nm span{color:var(--mut);font-size:.79rem}
+.fold{color:var(--ink);cursor:pointer}
+.qty{display:flex;align-items:center;gap:5px}
+.qty input{width:56px;text-align:center;padding:5px}
+.qty span{color:var(--mut);font-size:.66rem;font-weight:700;letter-spacing:.03em}
+.empty{color:var(--mut);font-size:.88rem;padding:14px 0;text-align:center;font-style:italic;font-family:var(--serif)}
+.tot{display:flex;justify-content:space-between;padding:5px 0;font-size:.92rem}
+.tot.big{font-family:var(--serif);font-weight:600;font-size:1.2rem;border-top:1px solid var(--line);margin-top:6px;padding-top:10px;color:var(--clay)}
+.hide{display:none}
+.scroll{overflow-x:auto}
+#bill{background:#fffdf7;color:#2c2a22;padding:30px;border-radius:3px;border:1px solid var(--line)}
+#bill h2{margin:0;font-family:var(--serif);font-weight:600;font-size:1.5rem;color:var(--moss)}
+#bill .meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;margin:18px 0;font-size:.85rem}
+#bill table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:440px}
+#bill th{text-align:left;border-bottom:2px solid var(--moss);color:var(--moss);padding:7px 6px;font-size:.72rem;font-weight:700;letter-spacing:.02em}
+#bill td{padding:8px 6px;border-bottom:1px solid #ece4d3}
+#bill .num{text-align:right}
+#bill .foot{margin-top:16px;font-size:.78rem;color:#8b8370;border-top:1px solid #ece4d3;padding-top:12px}
+#bill .sumbox{margin-left:auto;max-width:290px;margin-top:12px;font-size:.9rem}
+@media print{body{background:#fff}.noprint{display:none!important}.wrap{padding:0;max-width:none}#bill{border:0;padding:0;border-radius:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div id="ui" class="noprint">
+  <h1>Bill Maker</h1>
+  <p class="sub">Browse categories &rarr; add to cart &rarr; customer details &rarr; printable bill.</p>
+  <div class="tabs">
+    <button id="t0" aria-selected="true" onclick="tab(0)">Order</button>
+    <button id="t1" onclick="tab(1)">Catalogue</button>
+    <button id="t2" onclick="tab(2)">My shop</button>
+  </div>
+
+  <div id="p0">
+    <div class="card"><div class="hd">Products</div><div class="bd">
+      <div class="crumb" id="bc0"></div><div id="cat"></div></div></div>
+    <div class="card"><div class="hd">Cart</div><div class="bd">
+      <div id="cart"></div><div id="sums"></div></div></div>
+    <div class="card"><div class="hd">Customer</div><div class="bd">
+      <label>Name</label><input id="cName" placeholder="Full name">
+      <label>Address</label><textarea id="cAddr" placeholder="House, street, city, state, PIN"></textarea>
+      <div class="row">
+        <div><label>Phone / handle</label><input id="cPhone" placeholder="optional"></div>
+        <div><label>Order date</label><input id="cDate" type="date"></div>
+      </div>
+      <div class="row">
+        <div><label>Bill no.</label><input id="cNo"></div>
+        <div><label>Payment</label><select id="cPay">
+          <option>Paid — UPI</option><option>Paid — Bank transfer</option>
+          <option>Advance paid, balance on delivery</option><option>Cash on delivery</option>
+        </select></div>
+      </div>
+      <label>Shipping charge (₹)</label><input id="cShip" type="number" min="0" value="0">
+      <label>Note to customer</label><input id="cNote" placeholder="Thank you for your order!">
+      <div style="margin-top:14px" class="row">
+        <button class="act" onclick="make()">Generate bill</button>
+        <button class="act ghost" onclick="clearAll()">Clear order</button>
+      </div></div></div>
+  </div>
+
+  <div id="p1" class="hide">
+    <div class="card"><div class="hd">Edit catalogue</div><div class="bd">
+      <div class="crumb" id="bc1"></div>
+      <div class="row">
+        <div style="flex:2"><label>Name</label><input id="pN" placeholder="e.g. Anime, or Mini (10x15 cm)"></div>
+        <div style="max-width:120px"><label>Price ₹</label><input id="pP" type="number" min="0" placeholder="blank"></div>
+      </div>
+      <label>Description (optional)</label><input id="pD" placeholder="Short line shown under this category">
+      <p class="sub" style="margin:8px 0 0">Leave price blank to make it a folder you can open and fill with more items.</p>
+      <div style="margin-top:10px"><button class="act" onclick="addNode()">Add here</button></div>
+      <div id="mgr" style="margin-top:6px"></div></div></div>
+  </div>
+
+  <div id="p2" class="hide">
+    <div class="card"><div class="hd">Shop details</div><div class="bd">
+      <label>Business name</label><input id="sName" placeholder="Your keepsake brand">
+      <label>Tagline</label><input id="sTag" placeholder="Handmade keepsakes, made to order">
+      <label>Email</label><input id="sMail" placeholder="orders@yourbrand.com">
+      <label>Instagram / YouTube</label><input id="sSocial" placeholder="@yourhandle">
+      <label>City / State</label><input id="sLoc" placeholder="Delhi, India">
+      <label>Footer line</label><input id="sFoot" placeholder="GST not applicable — unregistered small supplier.">
+      <div style="margin-top:14px"><button class="act" onclick="saveShop()">Save</button> <span id="sOk" style="color:var(--mut);font-size:.85rem"></span></div>
+    </div></div>
+  </div>
+</div>
+
+<div id="billWrap" class="hide">
+  <div class="noprint" style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <button class="act" onclick="window.print()">🖨 Print bill</button>
+    <button class="act ghost" onclick="window.print()">Save as PDF</button>
+    <button class="act ghost" onclick="back()">Back to order</button>
+    <div style="flex-basis:100%;color:var(--mut);font-size:.8rem">In the print window pick your printer, or choose “Save as PDF” to email it.</div>
+  </div>
+  <div class="scroll"><div id="bill"></div></div>
+</div>
+</div>
+
+<script>
+var K='bm_v2', S={tree:[],shop:{},next:1}, cart=[], path0=[], path1=[];
+
+function seed(){var f=function(n,k){return {n:n,c:k||[],d:''};},l=function(n){return {n:n,p:0,d:''};};
+ return [
+  f('Calendars',[l('Mini (10x15 cm, wooden back support)'),l('Standard (20x20 cm with standee)'),l('Large (A4 or slightly bigger)')]),
+  f('Posters',[l('Small (11" x 17" tabloid)'),l('Medium (18" x 24")'),l('Large (24" x 36")'),l('Movie size (27" x 40")')]),
+  f('Stickers',[f('F1',[]),f('Anime',[]),f('AKU',[]),f('Standalone die cuts',[]),f('Sheet format',[])]),
+  f('Thank you cards',[l('Visiting card sized')]),
+  f('Bookmarks',[l('Standard size')]),
+  f('Notepads',[l('Mini'),l('Long (to-do lister)'),l('Planner style')]),
+  f('Quote cards',[]), f('Photocards',[]),
+  f('Packaging stickers',[l('1" – 1.5" diameter')]),
+  f('Laptop stickers',[]), f('Washi tape',[])
+ ];}
+
+function load(){try{var r=localStorage.getItem(K);if(r)S=JSON.parse(r);}catch(e){}
+ if(!S.tree||!S.tree.length)S.tree=seed(); S.shop=S.shop||{}; S.next=S.next||1;}
+function save(){try{localStorage.setItem(K,JSON.stringify(S));}catch(e){}}
+function rs(v){return '₹'+(Math.round(v*100)/100).toLocaleString('en-IN');}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function tab(i){[0,1,2].forEach(function(x){document.getElementById('t'+x).setAttribute('aria-selected',x===i);document.getElementById('p'+x).classList.toggle('hide',x!==i);});}
+
+function at(p){var l=S.tree;for(var i=0;i<p.length;i++){var nd=l[p[i]];if(!nd)return{list:S.tree,names:[]};l=nd.c=nd.c||[];}return{list:l};}
+function names(p){var l=S.tree,out=[];for(var i=0;i<p.length;i++){var nd=l[p[i]];if(!nd)break;out.push(nd.n);l=nd.c||[];}return out;}
+function isLeaf(nd){return nd.p!==undefined&&nd.p!==null&&(!nd.c||!nd.c.length);}
+
+function crumb(el,p,fn){var ns=names(p),h='<a onclick="'+fn+'(-1)">All products</a>';
+ ns.forEach(function(n,i){h+=' <span>›</span> <a onclick="'+fn+'('+i+')">'+esc(n)+'</a>';});
+ document.getElementById(el).innerHTML=h;}
+function go0(i){path0=i<0?[]:path0.slice(0,i+1);drawCat();}
+function go1(i){path1=i<0?[]:path1.slice(0,i+1);drawMgr();}
+
+function descLine(nd){return nd.d?'<br><span>'+esc(nd.d)+'</span>':'';}
+function drawCat(){crumb('bc0',path0,'go0');var L=at(path0).list,h='';
+ L.forEach(function(nd,i){
+  if(isLeaf(nd)) h+='<div class="item"><div class="nm"><b>'+esc(nd.n)+'</b><span>'+rs(nd.p)+'</span>'+descLine(nd)+'</div><button class="mini" onclick="add('+i+')">Add</button></div>';
+  else h+='<div class="item"><div class="nm fold" onclick="open0('+i+')"><b>'+esc(nd.n)+' ›</b><span>'+((nd.c||[]).length)+' option'+((nd.c||[]).length===1?'':'s')+'</span>'+descLine(nd)+'</div><button class="mini" onclick="open0('+i+')">Open</button></div>';});
+ document.getElementById('cat').innerHTML=h||'<div class="empty">Nothing here yet — add items in the Catalogue tab.</div>';}
+function open0(i){path0=path0.concat([i]);drawCat();}
+
+function drawMgr(){crumb('bc1',path1,'go1');var L=at(path1).list,h='';
+ L.forEach(function(nd,i){
+  var sub=isLeaf(nd)?rs(nd.p):((nd.c||[]).length+' inside');
+  h+='<div class="item" style="flex-wrap:wrap"><div class="nm'+(isLeaf(nd)?'':' fold')+'"'+(isLeaf(nd)?'':' onclick="open1('+i+')"')+'><b>'+esc(nd.n)+(isLeaf(nd)?'':' ›')+'</b><span>'+sub+'</span></div>'+
+   (isLeaf(nd)?'<div class="qty"><span>₹</span><input type="number" min="0" value="'+nd.p+'" onchange="setP('+i+',this.value)"></div>':'<button class="mini" onclick="open1('+i+')">Open</button>')+
+   '<button class="mini" onclick="delN('+i+')">&times;</button>'+
+   '<input style="flex-basis:100%;margin-top:6px;font-size:.82rem" value="'+esc(nd.d||'')+'" placeholder="Add a short description…" onchange="setDesc('+i+',this.value)"></div>';});
+ document.getElementById('mgr').innerHTML=h||'<div class="empty">Empty — add your first item here.</div>';}
+function setDesc(i,v){at(path1).list[i].d=v;save();drawCat();}
+function open1(i){path1=path1.concat([i]);drawMgr();}
+function setP(i,v){at(path1).list[i].p=parseFloat(v)||0;save();drawMgr();drawCat();}
+function delN(i){var nd=at(path1).list[i];
+ if(!isLeaf(nd)&&(nd.c||[]).length&&!confirm('Delete "'+nd.n+'" and everything inside it?'))return;
+ at(path1).list.splice(i,1);save();drawMgr();drawCat();}
+function addNode(){var n=document.getElementById('pN').value.trim(),pv=document.getElementById('pP').value.trim(),dv=document.getElementById('pD').value.trim();
+ if(!n)return alert('Enter a name.');
+ at(path1).list.push(pv===''?{n:n,c:[],d:dv}:{n:n,p:parseFloat(pv)||0,d:dv});
+ save();document.getElementById('pN').value='';document.getElementById('pP').value='';document.getElementById('pD').value='';drawMgr();drawCat();}
+
+function add(i){var nd=at(path0).list[i],lbl=names(path0).concat([nd.n]).join(' — ');
+ for(var j=0;j<cart.length;j++)if(cart[j].l===lbl){cart[j].q++;drawCart();return;}
+ cart.push({l:lbl,r:nd.p,q:1,d:0});drawCart();}
+function setQ(j,v){var q=parseInt(v)||0;if(q<1)cart.splice(j,1);else cart[j].q=q;drawCart();}
+function setD(j,v){cart[j].d=Math.max(0,parseFloat(v)||0);drawCart();}
+function setR(j,v){cart[j].r=Math.max(0,parseFloat(v)||0);drawCart();}
+function rm(j){cart.splice(j,1);drawCart();}
+function lines(){return cart.map(function(c){var g=c.r*c.q,d=Math.min(c.d,g);return {n:c.l,r:c.r,q:c.q,g:g,d:d,t:g-d};});}
+
+function drawCart(){var h='';
+ cart.forEach(function(c,j){h+='<div class="item"><div class="nm"><b>'+esc(c.l)+'</b><span>'+rs(c.r)+' each</span></div>'+
+  '<div class="qty"><span>RATE</span><input type="number" min="0" value="'+c.r+'" onchange="setR('+j+',this.value)"></div>'+
+  '<div class="qty"><span>QTY</span><input type="number" min="1" value="'+c.q+'" onchange="setQ('+j+',this.value)"></div>'+
+  '<div class="qty"><span>DISC ₹</span><input type="number" min="0" value="'+c.d+'" onchange="setD('+j+',this.value)"></div>'+
+  '<button class="mini" onclick="rm('+j+')">&times;</button></div>';});
+ document.getElementById('cart').innerHTML=h||'<div class="empty">Cart is empty.</div>';
+ var L=lines(),sub=0,dis=0;L.forEach(function(l){sub+=l.g;dis+=l.d;});
+ var sh=parseFloat(document.getElementById('cShip').value)||0;
+ document.getElementById('sums').innerHTML=L.length?
+  '<div class="tot"><span>Subtotal</span><span>'+rs(sub)+'</span></div>'+
+  '<div class="tot"><span>Discount</span><span>- '+rs(dis)+'</span></div>'+
+  (sh?'<div class="tot"><span>Shipping</span><span>'+rs(sh)+'</span></div>':'')+
+  '<div class="tot big"><span>Total</span><span>'+rs(sub-dis+sh)+'</span></div>':'';}
+
+function saveShop(){['Name','Tag','Mail','Social','Loc','Foot'].forEach(function(f){S.shop[f]=document.getElementById('s'+f).value;});
+ save();document.getElementById('sOk').textContent='Saved.';setTimeout(function(){document.getElementById('sOk').textContent='';},1800);}
+
+function make(){var L=lines();if(!L.length)return alert('Add at least one product.');
+ var nm=document.getElementById('cName').value.trim();if(!nm)return alert('Enter the customer name.');
+ var sh=parseFloat(document.getElementById('cShip').value)||0,sub=0,dis=0;
+ L.forEach(function(l){sub+=l.g;dis+=l.d;});
+ var sp=S.shop,rows='';
+ L.forEach(function(l,i){rows+='<tr><td>'+(i+1)+'</td><td>'+esc(l.n)+'</td><td class="num">'+rs(l.r)+'</td><td class="num">'+l.q+'</td><td class="num">'+(l.d?'- '+rs(l.d):'—')+'</td><td class="num">'+rs(l.t)+'</td></tr>';});
+ var d=document.getElementById('cDate').value,dt=d?new Date(d+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'';
+ document.getElementById('bill').innerHTML=
+  '<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">'+
+  '<div><h2>'+esc(sp.Name||'Your Keepsake Shop')+'</h2><div style="font-size:.82rem;color:#7a6a63">'+esc(sp.Tag||'')+'<br>'+esc(sp.Loc||'')+'</div></div>'+
+  '<div style="text-align:right;font-size:.82rem;color:#7a6a63"><div style="font-weight:700;color:#6e1b32;font-size:1rem;letter-spacing:.08em">BILL OF SUPPLY</div>'+
+  'No. '+esc(document.getElementById('cNo').value||'—')+'<br>'+dt+'</div></div>'+
+  '<div class="meta"><div><div style="font-size:.7rem;letter-spacing:.06em;color:#6e1b32;font-weight:700">BILLED &amp; SHIPPED TO</div>'+
+  '<b>'+esc(nm)+'</b><br>'+esc(document.getElementById('cAddr').value).replace(/\n/g,'<br>')+
+  (document.getElementById('cPhone').value?'<br>'+esc(document.getElementById('cPhone').value):'')+'</div>'+
+  '<div style="text-align:right"><div style="font-size:.7rem;letter-spacing:.06em;color:#6e1b32;font-weight:700">CONTACT</div>'+
+  esc(sp.Mail||'')+'<br>'+esc(sp.Social||'')+'</div></div>'+
+  '<table><thead><tr><th>#</th><th>Item</th><th class="num">Rate</th><th class="num">Qty</th><th class="num">Disc.</th><th class="num">Amount</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+  '<div class="sumbox"><div class="tot"><span>Subtotal</span><span>'+rs(sub)+'</span></div>'+
+  (dis?'<div class="tot"><span>Discount</span><span>- '+rs(dis)+'</span></div>':'')+
+  (sh?'<div class="tot"><span>Shipping</span><span>'+rs(sh)+'</span></div>':'')+
+  '<div class="tot big"><span>Total</span><span>'+rs(sub-dis+sh)+'</span></div>'+
+  '<div class="tot" style="color:#7a6a63"><span>Payment</span><span>'+esc(document.getElementById('cPay').value)+'</span></div></div>'+
+  '<div class="foot">'+esc(document.getElementById('cNote').value||'Thank you for your order!')+'<br>'+
+  esc(sp.Foot||'GST not applicable — unregistered small supplier.')+'</div>';
+ document.getElementById('ui').classList.add('hide');
+ document.getElementById('billWrap').classList.remove('hide');
+ S.next=(parseInt(document.getElementById('cNo').value.replace(/\D/g,''))||S.next)+1;save();window.scrollTo(0,0);}
+
+function back(){document.getElementById('ui').classList.remove('hide');
+ document.getElementById('billWrap').classList.add('hide');
+ document.getElementById('cNo').value=num();}
+function num(){return 'INV-'+new Date().getFullYear()+'-'+String(S.next).padStart(3,'0');}
+function clearAll(){cart=[];['cName','cAddr','cPhone','cNote'].forEach(function(i){document.getElementById(i).value='';});
+ document.getElementById('cShip').value=0;drawCart();}
+
+load();
+['Name','Tag','Mail','Social','Loc','Foot'].forEach(function(f){document.getElementById('s'+f).value=S.shop[f]||'';});
+document.getElementById('cDate').valueAsDate=new Date();
+document.getElementById('cNo').value=num();
+document.getElementById('cShip').addEventListener('input',drawCart);
+drawCat();drawMgr();drawCart();
+</script>
+</body>
+</html>
