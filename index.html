@@ -6,47 +6,43 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Bill Maker">
-<meta name="theme-color" content="#f4efe1">
+<meta name="theme-color" content="#f1e4cf">
 <title>Bill Maker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#f4efe1; --card:#fffdf7; --ink:#e6dfc5; --mut:#400006; --line:#e2dac4;
-  --black:#000000; --black:#000000; --clay:#b8654f; --clay-soft:#eddcd3;
+  --paper:#f1e4cf; --card:#fbf3e6; --ink:#33221f; --mut:#8a7566; --line:#e3d1b4;
+  --maroon:#47000f; --maroon-dp:#310009; --maroon-mute:#8a4a4f; --maroon-tint:#ecdad4;
   --serif:"Fraunces",Georgia,serif; --sans:"Karla",system-ui,-apple-system,"Segoe UI",sans-serif;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#211f18; --card:#2a2820; --ink:#ece6d5; --mut:#a9a08a; --line:#3c392c;
-  --moss:#8fa87d; --moss-dp:#a5bd92; --clay:#d98d76; --clay-soft:#3a2b25;
-}}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
 .wrap{max-width:900px;margin:0 auto;padding:20px 18px 60px}
-h1{font-family:var(--serif);font-weight:600;font-size:1.7rem;margin:2px 0 1px;letter-spacing:.01em}
+h1{font-family:var(--serif);font-weight:600;font-size:1.7rem;margin:2px 0 1px;letter-spacing:.01em;color:var(--maroon)}
 .sub{color:var(--mut);font-size:.87rem;margin:0 0 20px}
 .tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--line)}
 .tabs button{flex:1;padding:10px 8px;border:none;border-bottom:2px solid transparent;background:transparent;color:var(--mut);font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;margin-bottom:-1px}
-.tabs button[aria-selected="true"]{color:var(--moss);border-bottom-color:var(--moss)}
+.tabs button[aria-selected="true"]{color:var(--maroon);border-bottom-color:var(--maroon)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:3px;margin-bottom:16px;overflow:hidden}
-.card>.hd{font-family:var(--serif);font-style:italic;font-weight:500;color:var(--moss);padding:13px 16px 10px;font-size:1.08rem;border-bottom:1px solid var(--line)}
+.card>.hd{font-family:var(--serif);font-style:italic;font-weight:500;color:var(--maroon-mute);padding:13px 16px 10px;font-size:1.08rem;border-bottom:1px solid var(--line)}
 .card>.bd{padding:16px}
 label{display:block;font-size:.72rem;color:var(--mut);font-weight:600;margin:11px 0 4px;letter-spacing:.02em}
 input,textarea,select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink);font:inherit;font-size:.93rem}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--moss);box-shadow:0 0 0 3px color-mix(in srgb,var(--moss) 15%,transparent)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--maroon);box-shadow:0 0 0 3px color-mix(in srgb,var(--maroon) 15%,transparent)}
 textarea{min-height:64px;resize:vertical}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row>*{flex:1;min-width:130px}
-button.act{padding:10px 16px;border-radius:3px;border:1px solid var(--moss);background:var(--moss);color:#fdf9ef;font:inherit;font-weight:600;font-size:.9rem;cursor:pointer;transition:background .15s}
-button.act:hover{background:var(--moss-dp)}
-button.ghost{background:transparent;color:var(--moss)}
-button.mini{padding:5px 11px;font-size:.79rem;border-radius:3px;border:1px solid var(--line);background:transparent;color:var(--moss);font-weight:600;cursor:pointer}
-button.mini:hover{border-color:var(--moss)}
+button.act{padding:10px 16px;border-radius:3px;border:1px solid var(--maroon);background:var(--maroon);color:#fbf3e6;font:inherit;font-weight:600;font-size:.9rem;cursor:pointer;transition:background .15s}
+button.act:hover{background:var(--maroon-dp)}
+button.ghost{background:transparent;color:var(--maroon)}
+button.mini{padding:5px 11px;font-size:.79rem;border-radius:3px;border:1px solid var(--line);background:transparent;color:var(--maroon);font-weight:600;cursor:pointer}
+button.mini:hover{border-color:var(--maroon)}
 .crumb{font-size:.82rem;color:var(--mut);margin-bottom:10px;word-break:break-word}
-.crumb a{color:var(--clay);font-weight:600;cursor:pointer;text-decoration:none}
+.crumb a{color:var(--maroon);font-weight:600;cursor:pointer;text-decoration:none}
 .item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
 .item:last-child{border-bottom:0}
 .item .nm{flex:1;min-width:0}
@@ -58,14 +54,14 @@ button.mini:hover{border-color:var(--moss)}
 .qty span{color:var(--mut);font-size:.66rem;font-weight:700;letter-spacing:.03em}
 .empty{color:var(--mut);font-size:.88rem;padding:14px 0;text-align:center;font-style:italic;font-family:var(--serif)}
 .tot{display:flex;justify-content:space-between;padding:5px 0;font-size:.92rem}
-.tot.big{font-family:var(--serif);font-weight:600;font-size:1.2rem;border-top:1px solid var(--line);margin-top:6px;padding-top:10px;color:var(--clay)}
+.tot.big{font-family:var(--serif);font-weight:600;font-size:1.2rem;border-top:1px solid var(--line);margin-top:6px;padding-top:10px;color:var(--maroon)}
 .hide{display:none}
 .scroll{overflow-x:auto}
-#bill{background:#fffdf7;color:#2c2a22;padding:30px;border-radius:3px;border:1px solid var(--line)}
-#bill h2{margin:0;font-family:var(--serif);font-weight:600;font-size:1.5rem;color:var(--moss)}
+#bill{background:#fbf3e6;color:#33221f;padding:30px;border-radius:3px;border:1px solid var(--line)}
+#bill h2{margin:0;font-family:var(--serif);font-weight:600;font-size:1.5rem;color:var(--maroon)}
 #bill .meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;margin:18px 0;font-size:.85rem}
 #bill table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:440px}
-#bill th{text-align:left;border-bottom:2px solid var(--moss);color:var(--moss);padding:7px 6px;font-size:.72rem;font-weight:700;letter-spacing:.02em}
+#bill th{text-align:left;border-bottom:2px solid var(--maroon);color:var(--maroon);padding:7px 6px;font-size:.72rem;font-weight:700;letter-spacing:.02em}
 #bill td{padding:8px 6px;border-bottom:1px solid #ece4d3}
 #bill .num{text-align:right}
 #bill .foot{margin-top:16px;font-size:.78rem;color:#8b8370;border-top:1px solid #ece4d3;padding-top:12px}
